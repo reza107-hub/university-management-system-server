@@ -29,6 +29,7 @@ async function run() {
         const usersCollection = client.db("muDatabase").collection("users");
         const admissionRequestCollection = client.db("muDatabase").collection("admissionRequest");
         const students = client.db("muDatabase").collection("students")
+        const adminCollection = client.db("muDatabase").collection("admins")
 
         app.get('/users', async (req, res) => {
             const result = await usersCollection.find().toArray()
@@ -132,6 +133,19 @@ async function run() {
             const updateDoc = {
                 $set: {
                     role: 'admin'
+                },
+            };
+
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.send(result);
+
+        })
+        app.patch('/users/remove/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    role: ''
                 },
             };
 
