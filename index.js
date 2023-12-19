@@ -26,15 +26,28 @@ async function run() {
         // await client.connect();
         // Send a ping to confirm a successful connection
 
+        // ----------------------------------------------------------
+        // mongo db collection
+
         const usersCollection = client.db("muDatabase").collection("users");
+        const usersAdditionalInformationCollection = client.db("muDatabase").collection("usersAdditionalInformation");
         const admissionRequestCollection = client.db("muDatabase").collection("admissionRequest");
-        const students = client.db("muDatabase").collection("students")
-        const adminCollection = client.db("muDatabase").collection("admins")
+        const adminCollection = client.db("muDatabase").collection("admin");
+
+        //------------------------------------------------------------------------
 
         app.get('/users', async (req, res) => {
             const result = await usersCollection.find().toArray()
             res.send(result)
         })
+
+        // -----------------------------------
+        // users additional information get
+        app.get('/users-additional-information', async (req, res) => {
+            const result = await usersAdditionalInformationCollection.find().toArray()
+            res.send(result)
+        })
+
 
         app.get('/admission-request', async (req, res) => {
             const result = await admissionRequestCollection.find().toArray()
@@ -127,19 +140,38 @@ async function run() {
 
         })
 
+        //----------------------------------------------------------------
+
+        // admin making
+
         app.patch('/users/admin/:id', async (req, res) => {
-            const id = req.params.id;
-            const filter = { _id: new ObjectId(id) };
-            const updateDoc = {
-                $set: {
-                    role: 'admin'
-                },
-            };
+            try {
+                const body = req.body;
+                const id = req.params.id;
+                const filter = { _id: new ObjectId(id) };
+                const updateDoc = {
+                    $set: {
+                        role: 'admin'
+                    },
+                };
 
-            const result = await usersCollection.updateOne(filter, updateDoc);
-            res.send(result);
+                const result = await usersCollection.updateOne(filter, updateDoc);
 
-        })
+                if (result.modifiedCount === 1) {
+                    const adminResult = await adminCollection.insertOne(body);
+                    res.send(adminResult);
+                } else {
+                    res.send(result);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                res.status(500).send('Internal Server Error');
+            }
+        });
+
+
+        //----------------------------------------------------------------
+
         app.patch('/users/remove/admin/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
@@ -154,6 +186,9 @@ async function run() {
 
         })
 
+        // ----------------------------------------------
+        // users post
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const query = { email: user.email }
@@ -164,6 +199,32 @@ async function run() {
             const result = await usersCollection.insertOne(req.body)
             res.send(result)
         })
+
+        // ----------------------------------------------
+
+        // users additional information post
+
+        app.post('/users-additional-information', async (req, res) => {
+            const data = req.body
+            const existingData = await usersAdditionalInformationCollection.findOne({ email: data.email })
+            const user = await usersCollection.findOne({ email: data.email });
+            if (existingData) {
+                return res.send({ message: 'already exists' })
+            }
+            const result = await usersAdditionalInformationCollection.insertOne(data)
+            result.message = 'Information Added successfully'
+
+            const filter = { _id: new ObjectId(data.userId) };
+            const updateDoc = {
+                $set: {
+                    hasAdditionalInfo: true
+                },
+            };
+            const updatedResult = await usersCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+
+        // -------------------------------------
 
         app.post('/admission-request', async (req, res) => {
             const data = req.body;
