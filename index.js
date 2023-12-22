@@ -114,68 +114,56 @@ async function run() {
         // students collection making
 
         app.post('/students', async (req, res) => {
-
             try {
-                const details = req.body
-                const date = new Date()
-                const currentMonth = date.getMonth() + 1
-                const lastTwoDigitsOfYear = (Number(details?.yearOfRegistration) % 100);
+              const details = req.body;
+              const date = new Date();
+              const currentMonth = date.getMonth() + 1;
+              const lastTwoDigitsOfYear = (Number(details?.yearOfRegistration) % 100);
+          
+              const department = details?.department;
+          
+              const lastStudent = await studentsCollection
+                .find().project({ studentId: 1, _id: 0 })
+                .sort({ studentId: -1 })
+                .limit(1)
+                .toArray();
+          
+              const lastStudentId = lastStudent[0]?.studentId || '000-000-000';  
+             
 
-                const department = details?.department
-
-                const lastStudent = await usersCollection
-                    .find({ role: "student", dept: department }, { std_id: 1, _id: 0 })
-                    .sort({ std_id: -1 })
-                    .limit(1)
-                    .toArray();
-
-                const lastStudentId = lastStudent[0]?.std_id;  //001
-
-                let currentId = (0).toString();//000
-                let currentStudentYear = lastTwoDigitsOfYear.toString()
-                let lastStudentYear = lastStudentId?.substring(0, 2)
-                let currentSemesterCode;
-                if (currentMonth == 12 || currentMonth == 1 || currentMonth == 2) {
-                    currentSemesterCode = 1
-                } else {
-                    currentSemesterCode = 2
-                }
-
-                let lastStudentSemesterCode = lastStudentId?.substring(2, 3)
-
-
-                let currentDeptCode;
-
-                if (details?.department === 'CSE') {
-                    currentDeptCode = '115'
-                }
-                else {
-                    currentDeptCode = '116'
-                }
-
-                let lastStudentDeptCode = lastStudentId?.substring(4, 7)
-
-
-
-                if (lastStudent && lastStudentYear == currentStudentYear && lastStudentSemesterCode == currentSemesterCode && currentDeptCode == lastStudentDeptCode) {
-                    currentId = lastStudentId.substring(8)
-                }
-                let incrementId = (Number(currentId) + 1).toString().padStart(3, '0');
-                let finalId = currentStudentYear + currentSemesterCode + '-' + currentDeptCode + '-' + incrementId
-
-                details.studentId = finalId;
-
-                const result = await studentsCollection.insertOne(details);
-                res.send(result);
-
-                if (result.insertedId) {
-                    const admissionResult = await admissionRequestCollection.deleteOne({ _id: new ObjectId(details?._id) })
-                }
+              let currentId = '000';
+              let currentStudentYear = lastTwoDigitsOfYear.toString();
+              let lastStudentYear = lastStudentId?.substring(0, 2);
+              let currentSemesterCode = (currentMonth == 12 || currentMonth == 1 || currentMonth == 2) ? '1' : '2';
+              let lastStudentSemesterCode = lastStudentId?.substring(2, 3);
+              let currentDeptCode = (details?.department === 'CSE') ? '115' : '116';
+              let lastStudentDeptCode = lastStudentId?.substring(4, 7);
+          
+              if (
+                lastStudentYear === currentStudentYear &&
+                lastStudentSemesterCode === currentSemesterCode &&
+                lastStudentDeptCode === currentDeptCode
+              ) {
+                currentId = lastStudentId.substring(8);
+              }
+          
+              let incrementId = (Number(currentId) + 1).toString().padStart(3, '0');
+              let finalId = currentStudentYear + currentSemesterCode + '-' + currentDeptCode + '-' + incrementId;
+         
+              details.studentId = finalId;
+          
+              const result = await studentsCollection.insertOne(details);
+              res.send(result);
+          
+              if (result.insertedId) {
+                const admissionResult = await admissionRequestCollection.deleteOne({ _id: new ObjectId(details?._id) });
+              }
             } catch (error) {
-                console.error('Error:', error);
-                res.status(500).send('Internal Server Error');
+              console.error('Error:', error);
+              res.status(500).send('Internal Server Error');
             }
-        })
+          });
+          
 
         //----------------------------------------------------------------
 
