@@ -7,10 +7,10 @@ const getIsUserHasAdditionalInformation = catchAsync(async (req, res) => {
     const result = await usersAdditionalInformationService.getIsUserHasAdditionalInformationFromDB();
 
     sendResponse(res, {
-        success: true,
-        statusCode: 201,
-        message: 'User registered successfully',
-        data: result,
+      success: true,
+      statusCode: 201,
+      message: 'Users Additional Information retrieved successfully',
+      data: result,
     });
 });
 
