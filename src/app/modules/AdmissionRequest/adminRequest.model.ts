@@ -32,7 +32,7 @@ const admissionSchema = new Schema<TAdmission>(
   }
 );
 
-const Admission = model<TAdmission>("admissionRequest", admissionSchema);
+const Admission = model<TAdmission>('admissionRequest', admissionSchema);
 //admissionRequestCollection
 
 export default Admission;

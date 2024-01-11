@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 //application routes
-app.use('/uni', router);
+app.use('/api', router);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to test the university server');

@@ -1,19 +1,55 @@
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import { AdminService } from "./admin.service";
-
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { AdminService } from './admin.service';
 
 const getAdminList = catchAsync(async (req, res) => {
-    const result = await AdminService.getAdminListFromDB();
-  
-    sendResponse(res, {
-      success: true,
-      statusCode: 201,
-      message: 'User registered successfully',
-      data: result,
-    });
-  });
+  const result = await AdminService.getAdminListFromDB();
 
-  export const AdminController = {
-    getAdminList
-  }
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'User registered successfully',
+    data: result,
+  });
+});
+
+const createAdmin = catchAsync(async (req, res) => {
+  const result = await AdminService.createAdminIntoDB(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Admin created successfully',
+    data: result,
+  });
+});
+
+const getUserIsAdmin = catchAsync(async (req, res) => {
+  const email = req.params.email;
+  const result = await AdminService.getUserIsAdminFromDb(email);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Single Admin retrieved successfully',
+    data: result,
+  });
+});
+
+const deleteAdmin = catchAsync(async (req, res) => {
+  const result = await AdminService.deleteAdminFromDb(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Admin deleted successfully',
+    data: result,
+  });
+});
+
+export const AdminController = {
+  getAdminList,
+  createAdmin,
+  getUserIsAdmin,
+  deleteAdmin,
+};

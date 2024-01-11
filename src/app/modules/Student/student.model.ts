@@ -44,7 +44,7 @@ const studentSchema = new Schema<TStudent>(
       timestamps: true,
     }
   );
-  
-  const Student = model<TStudent>('Student', studentSchema);
-  
+
+  const Student = model<TStudent>('students', studentSchema);
+
   export default Student;
