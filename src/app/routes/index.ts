@@ -14,7 +14,7 @@ const moduleRoutes = [
       route: userRouter,
     },
     {
-      path: '/users-additional-information',
+      path: '/userAdditionalInfo',
       route: usersAdditionalInformationRoute,
     },
     {
@@ -30,9 +30,9 @@ const moduleRoutes = [
       route: AdmissionRequestRoute,
     },
   ];
-  
+
   moduleRoutes.forEach((route) => router.use(route.path, route.route));
-  
+
 
 
 export default router;
