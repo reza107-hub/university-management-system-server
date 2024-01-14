@@ -6,7 +6,7 @@ const adminSchema = new Schema<TAdmin>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'User',
     },
     name: {
       type: String,
