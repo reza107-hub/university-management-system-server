@@ -8,6 +8,7 @@ import { programRoute } from "../modules/Program/program.route";
 import { DepartmentRoute } from "../modules/Department/department.route";
 import { semesterRegistrationRoutes } from "../modules/semesterRegistration/semesterRegistration.route";
 import { AcademicSemesterRoutes } from "../modules/academicSemester/academicSemester.route";
+import { batchRoute } from "../modules/batch/batch.route";
 
 
 const router = Router();
@@ -48,6 +49,10 @@ const moduleRoutes = [
     {
       path: '/academic-semesters',
       route: AcademicSemesterRoutes,
+    },
+    {
+      path: '/batch',
+      route: batchRoute,
     },
   ];
 
