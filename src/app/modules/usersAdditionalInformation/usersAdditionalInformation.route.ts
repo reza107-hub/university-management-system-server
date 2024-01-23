@@ -8,6 +8,11 @@ router.get(
   '/',
   UserAdditionalInformationController.getIsUserHasAdditionalInformation,
 );
+
+router.get(
+  '/:email',
+  UserAdditionalInformationController.getPresentUserHasAdditionalInformation,
+);
 router.post(
   '/create',
   validateRequest(userAdditionalInformationValidation.UserAdditionalInformationValidationSchema),

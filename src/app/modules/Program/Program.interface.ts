@@ -1,3 +1,5 @@
 export type TProgram = {
-    name: string;
-}
+  name: string;
+  shortName: string;
+  isDeleted: boolean;
+};
