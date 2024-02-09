@@ -19,6 +19,7 @@ export type TAdmission = {
   presentAddress: string;
   permanentAddress: string;
   bloodGroup: string;
+  age:number;
   programme: string;
   department: string;
   yearOfRegistration: string;
