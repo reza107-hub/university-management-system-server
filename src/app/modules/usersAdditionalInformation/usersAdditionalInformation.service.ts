@@ -5,7 +5,16 @@ import httpStatus from 'http-status';
 import usersAdditionalInformationModel from './usersAdditionalInformation.model';
 
 const getIsUserHasAdditionalInformationFromDB = async () => {
-  const result = await usersAdditionalInformationModel.find().populate('userId');
+  const result = await usersAdditionalInformationModel
+    .find()
+    .populate('userId');
+  return result;
+};
+
+const getPresentUserHasAdditionalInformationFromDB = async (email: string) => {
+  const result = await usersAdditionalInformationModel
+    .findOne({ email })
+    .populate('userId');
   return result;
 };
 
@@ -28,4 +37,5 @@ const postUserAdditionalInformationIntoDB = async (
 export const usersAdditionalInformationService = {
   getIsUserHasAdditionalInformationFromDB,
   postUserAdditionalInformationIntoDB,
+  getPresentUserHasAdditionalInformationFromDB,
 };

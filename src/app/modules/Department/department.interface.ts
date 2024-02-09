@@ -1,9 +1,9 @@
-import { Types } from "mongoose";
-
+import { Types } from 'mongoose';
 
 export type TDepartment = {
-    name: string;
-    shortForm: string;
-    code: string;
-    program:Types.ObjectId
-}
+  code: string;
+  name: string;
+  shortForm: string;
+  program: Types.ObjectId;
+  isDeleted: boolean;
+};
