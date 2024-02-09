@@ -13,6 +13,17 @@ const createBatch = catchAsync(async (req, res) => {
       data: result,
     });
   });
+const updateBatch = catchAsync(async (req, res) => {
+  const id = req.params.id;
+    const result = await BatchServices.updateBatchIntoDB(id,req.body);
+  
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: 'Batch update successfully',
+      data: result,
+    });
+  });
 const getAllBatch = catchAsync(async (req, res) => {
     const result = await BatchServices.getAllBatchFromDB();
   
@@ -26,5 +37,6 @@ const getAllBatch = catchAsync(async (req, res) => {
 
   export const BatchControllers = {
     createBatch,
-    getAllBatch
+    getAllBatch,
+    updateBatch
   }

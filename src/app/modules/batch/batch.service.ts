@@ -13,6 +13,21 @@ const createBatchIntoDB = async (payload: TBatch) => {
     const result = await Batch.create(payload)
     return result
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateBatchIntoDB = async (_id:any,payload: TBatch) => {
+    const result = await Batch.findByIdAndUpdate(
+        { _id},
+        payload,
+        { new: true }
+      );
+    
+      // Checking if the flower does not exist or is deleted
+      if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Batch not found or is deleted');
+      }
+    
+      return result;
+}
 
 const getAllBatchFromDB = async () => {
     const result = await Batch.find()
@@ -21,5 +36,6 @@ const getAllBatchFromDB = async () => {
 
 export const BatchServices = {
     createBatchIntoDB,
-    getAllBatchFromDB
+    getAllBatchFromDB,
+    updateBatchIntoDB
 }
