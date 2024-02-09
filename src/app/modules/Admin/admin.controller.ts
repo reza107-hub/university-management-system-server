@@ -8,7 +8,7 @@ const getAdminList = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: 201,
-    message: 'User registered successfully',
+    message: 'Admin list retrieved successfully',
     data: result,
   });
 });

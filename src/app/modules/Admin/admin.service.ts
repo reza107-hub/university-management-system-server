@@ -41,8 +41,8 @@ const getUserIsAdminFromDb = async (email: string) => {
 };
 
 const deleteAdminFromDb = async (playLoad: TAdmin) => {
-  const { _id,userId } = playLoad;
-  const id =  userId?._id
+  const { _id, userId } = playLoad;
+  const id = userId?._id;
   const result = await Admin.findByIdAndDelete(_id);
   if (!result) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Admin delete not successful');
