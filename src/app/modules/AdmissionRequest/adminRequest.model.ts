@@ -1,10 +1,16 @@
 import { Schema, model } from "mongoose";
-import { TAdmission } from "./adminRequest.interface";
+import { TAdmission, TName } from "./adminRequest.interface";
 
+const Name = new Schema<TName>({
+  firstName:{type: "string",required:true},
+  lastName:{type: "string",required:true}
+})
 const admissionSchema = new Schema<TAdmission>(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    fname:{
+      type:Name,
+      required:true
+    },
     fatherName: { type: String, required: true },
     fatherOccupation: { type: String, required: true },
     motherName: { type: String, required: true },
@@ -18,7 +24,7 @@ const admissionSchema = new Schema<TAdmission>(
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
     bloodGroup: { type: String, required: true },
-    age: { type: String, required: true },
+    age: { type: Number, required: true },
     programme: { type: String, required: true },
     department: { type: String, required: true },
     yearOfRegistration: { type: String, required: true },

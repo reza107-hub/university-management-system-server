@@ -13,7 +13,7 @@ const batchSchema = new Schema<TBatch>(
         isAdmissionGoing:{
             type: Boolean,
             required: true,
-            default: false,
+            default: true,
         }
     },
     {
