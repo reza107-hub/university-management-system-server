@@ -1,12 +1,11 @@
-import mongoose, { Schema } from "mongoose";
-import { TAdmin } from "./admin.interface";
-
+import mongoose, { Schema } from 'mongoose';
+import { TAdmin } from './admin.interface';
 
 const adminSchema = new Schema<TAdmin>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
     },
     name: {
       type: String,
@@ -45,9 +44,9 @@ const adminSchema = new Schema<TAdmin>(
       type: String,
       required: true,
     },
-    bloodGroup :{
-        type: String,
-        required: true,
+    bloodGroup: {
+      type: String,
+      required: true,
     },
     isDeleted: {
       type: Boolean,
