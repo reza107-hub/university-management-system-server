@@ -6,9 +6,14 @@ import AppError from '../../error/AppError';
 import User from '../User/user.model';
 import Faculty from './faculty.model';
 import { TFaculty } from './faculty.interface';
+import { searchByNameInDB } from '../../utils/searchByname';
 
-const getFacultyListFromDB = async () => {
-  const result = await Faculty.find({ isDeleted: false }).populate('userId');
+const getFacultyListFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
+query: Record<string, any>,) => {
+
+  const faculties =  Faculty.find({ isDeleted: false });
+  const search = searchByNameInDB(query)
+  const result = await faculties.find(search).populate('userId');
   return result;
 };
 

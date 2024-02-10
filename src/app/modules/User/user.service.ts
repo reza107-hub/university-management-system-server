@@ -3,6 +3,7 @@ import User from "./user.model"
 import { TUser } from "./user.interface"
 import AppError from "../../error/AppError"
 import httpStatus from "http-status"
+import { searchByNameInDB } from "../../utils/searchByname"
 
 
 
@@ -16,8 +17,13 @@ const createUserIntoDB = async (user:TUser) => {
     return(result)
 }
 
-const getUsersFromDB = async () => {
-    const result = await User.find()
+const getUsersFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
+query: Record<string, any>) => {
+    const users =  User.find()
+   
+    const search = searchByNameInDB(query)
+    const result = await users.find(search)
+
     return result
 }
 
