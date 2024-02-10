@@ -1,5 +1,5 @@
-import mongoose, { Schema} from "mongoose";
-import { TUser } from "./user.interface";
+import mongoose, { Schema } from 'mongoose';
+import { TUser } from './user.interface';
 
 const userSchema = new Schema<TUser>(
   {
@@ -10,7 +10,8 @@ const userSchema = new Schema<TUser>(
     },
     role: {
       type: String,
-      required: true,
+      enum: ['user', 'student', 'faculty', 'admin'],
+      default: 'user',
     },
 
     hasAdditionalInfo: {
@@ -27,7 +28,7 @@ const userSchema = new Schema<TUser>(
   },
 );
 
-  const User = mongoose.model<TUser>('user', userSchema);
-  //usersCollection
+const User = mongoose.model<TUser>('user', userSchema);
+//usersCollection
 
-  export default User;
+export default User;
