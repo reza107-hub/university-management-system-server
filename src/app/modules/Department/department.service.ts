@@ -30,7 +30,16 @@ query: Record<string, any>) => {
   return result;
 };
 
+const deleteDepartmentFromDb = async (id: string) => {
+  const result = await Department.findByIdAndDelete(id);
+  if (!result) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Department does not exists');
+  }
+  return result;
+};
+
 export const departmentServices = {
   createDepartmentIntoDB,
   getDepartmentFromDB,
+  deleteDepartmentFromDb,
 };

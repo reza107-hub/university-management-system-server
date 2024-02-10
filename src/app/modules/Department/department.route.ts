@@ -12,5 +12,6 @@ router.post(
 );
 
 router.get('/', departmentController.getDepartment);
+router.delete('/delete-dept/:id', departmentController.deleteDepartment);
 
 export const DepartmentRoute = router;
