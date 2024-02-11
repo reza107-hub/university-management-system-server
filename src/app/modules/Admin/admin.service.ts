@@ -5,9 +5,18 @@ import AppError from '../../error/AppError';
 import { TAdmin } from './admin.interface';
 import Admin from './admin.model';
 import User from '../User/user.model';
+import { searchByNameInDB } from '../../utils/searchByname';
 
-const getAdminListFromDB = async () => {
-  const result = await Admin.find({ isDeleted: false }).populate('userId');
+const getAdminListFromDB = async (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+query: Record<string, any>) => {
+
+const admins =  Admin.find({ isDeleted: false })
+
+const search = searchByNameInDB(query)
+
+const result = await admins.find(search).populate('userId');
+ 
   return result;
 };
 

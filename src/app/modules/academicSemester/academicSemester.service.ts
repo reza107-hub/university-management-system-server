@@ -3,6 +3,7 @@ import AppError from '../../error/AppError';
 import { academicSemesterNameCodeMapper } from './academicSemester.constant';
 import { TAcademicSemester } from './academicSemester.interface';
 import { AcademicSemester } from './academicSemester.model';
+import { searchByNameInDB } from '../../utils/searchByname';
 
 const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   const query = { year: payload.year, name: payload.name };
@@ -21,8 +22,12 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   return result;
 };
 
-const getAllAcademicSemestersFromDB = async () => {
-  const result = await AcademicSemester.find();
+const getAllAcademicSemestersFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
+query: Record<string, any>) => {
+  const academicSemesters = AcademicSemester.find();
+  const search = searchByNameInDB(query)
+
+const result = await academicSemesters.find(search)
   return result;
 };
 

@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../error/AppError';
 import Program from './program.model';
 import { TProgram } from './Program.interface';
+import { searchByNameInDB } from '../../utils/searchByname';
 
 const createProgramIntoDB = async (payload: TProgram) => {
   const { name } = payload;
@@ -13,8 +14,11 @@ const createProgramIntoDB = async (payload: TProgram) => {
   return result;
 };
 
-const getAllProgramsFromDB = async () => {
-  const result = await Program.find({ isDeleted: false });
+const getAllProgramsFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
+query: Record<string, any>) => {
+  const programs =  Program.find({ isDeleted: false });
+  const search = searchByNameInDB(query)
+  const result = await programs.find(search)
   return result;
 };
 
