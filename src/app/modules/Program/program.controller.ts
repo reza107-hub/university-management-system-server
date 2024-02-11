@@ -13,7 +13,7 @@ const createProgram = catchAsync(async (req, res) => {
   });
 });
 const getAllProgram = catchAsync(async (req, res) => {
-  const result = await programServices.getAllProgramsFromDB();
+  const result = await programServices.getAllProgramsFromDB(req.query);
 
   sendResponse(res, {
     success: true,

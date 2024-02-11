@@ -14,7 +14,7 @@ const createProgram = catchAsync(async (req, res) => {
 });
 
 const getDepartment = catchAsync(async (req, res) => {
-  const result = await departmentServices.getDepartmentFromDB();
+  const result = await departmentServices.getDepartmentFromDB(req.query);
 
   sendResponse(res, {
     success: true,

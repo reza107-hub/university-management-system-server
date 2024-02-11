@@ -4,7 +4,7 @@ import { FacultyService } from './faculty.service';
 
 
 const getFacultyList = catchAsync(async (req, res) => {
-  const result = await FacultyService.getFacultyListFromDB();
+  const result = await FacultyService.getFacultyListFromDB(req.query);
 
   sendResponse(res, {
     success: true,
