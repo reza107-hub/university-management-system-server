@@ -1,11 +1,10 @@
 export type TName = {
-  firstName: string
-  lastName: string
-}
-
+  firstName: string;
+  lastName: string;
+};
 
 export type TAdmission = {
-  fname: TName;
+  name: TName;
   fatherName: string;
   fatherOccupation: string;
   motherName: string;
@@ -19,13 +18,13 @@ export type TAdmission = {
   presentAddress: string;
   permanentAddress: string;
   bloodGroup: string;
-  age:number;
   programme: string;
   department: string;
+  batch: number;
   yearOfRegistration: string;
   nationality: string;
   profileImage: string;
   sscCertificate: string;
   hscCertificate: string;
+  isApproved: boolean;
 };
-

@@ -13,9 +13,16 @@ router.get(
   '/:email',
   UserAdditionalInformationController.getPresentUserHasAdditionalInformation,
 );
+
+router.patch(
+  '/:id',
+  UserAdditionalInformationController.updateUsersAdditionalInformation,
+);
 router.post(
   '/create',
-  validateRequest(userAdditionalInformationValidation.UserAdditionalInformationValidationSchema),
+  validateRequest(
+    userAdditionalInformationValidation.UserAdditionalInformationValidationSchema,
+  ),
   UserAdditionalInformationController.postUserAdditionalInformation,
 );
 export const usersAdditionalInformationRoute = router;

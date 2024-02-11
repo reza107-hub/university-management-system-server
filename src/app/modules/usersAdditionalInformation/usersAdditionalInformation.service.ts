@@ -34,8 +34,21 @@ const postUserAdditionalInformationIntoDB = async (
   return result;
 };
 
+const updateUsersAdditionalInformationToDb = async (
+  id: string,
+  payload: TUserAdditionalInformation,
+) => {
+  const result = await usersAdditionalInformationModel.findByIdAndUpdate(
+    id,
+    payload,
+  );
+
+  return result;
+};
+
 export const usersAdditionalInformationService = {
   getIsUserHasAdditionalInformationFromDB,
   postUserAdditionalInformationIntoDB,
   getPresentUserHasAdditionalInformationFromDB,
+  updateUsersAdditionalInformationToDb,
 };
