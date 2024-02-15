@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-import { ObjectId } from "mongodb"
-import User from "./user.model"
-import { TUser } from "./user.interface"
-import AppError from "../../error/AppError"
-import httpStatus from "http-status"
-import { searchByNameInDB } from "../../utils/searchByname"
-=======
 import { ObjectId } from 'mongodb';
 import User from './user.model';
 import { TUser } from './user.interface';
 import AppError from '../../error/AppError';
 import httpStatus from 'http-status';
->>>>>>> 33cbfdc059c3e8c489179651498840f4e924fca9
-
+import { searchByNameInDB } from '../../utils/searchByname';
+import { receiveEmail } from '../../utils/receiveEmail';
 const createUserIntoDB = async (user: TUser) => {
   const query = { email: user.email };
   const existingUser = await User.findOne(query);
@@ -49,9 +41,16 @@ const makeStudentIntoDB = async (id: string) => {
   return result;
 };
 
+
+const sendContactEmailService = async (email:string,subject:string , message:string)=>{
+  console.log({email,subject,message})
+  await receiveEmail(email,subject,message)
+}
+
 export const userService = {
   getUsersFromDB,
   makeStudentIntoDB,
   createUserIntoDB,
   getPresentUserFromDB,
+  sendContactEmailService
 };
