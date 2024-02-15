@@ -3,7 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { AdminService } from './admin.service';
 
 const getAdminList = catchAsync(async (req, res) => {
-  const result = await AdminService.getAdminListFromDB();
+  const result = await AdminService.getAdminListFromDB(req.query);
 
   sendResponse(res, {
     success: true,

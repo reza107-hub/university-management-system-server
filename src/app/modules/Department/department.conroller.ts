@@ -14,7 +14,7 @@ const createProgram = catchAsync(async (req, res) => {
 });
 
 const getDepartment = catchAsync(async (req, res) => {
-  const result = await departmentServices.getDepartmentFromDB();
+  const result = await departmentServices.getDepartmentFromDB(req.query);
 
   sendResponse(res, {
     success: true,
@@ -23,8 +23,19 @@ const getDepartment = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteDepartment = catchAsync(async (req, res) => {
+  const result = await departmentServices.deleteDepartmentFromDb(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'department deleted successfully',
+    data: result,
+  });
+});
 
 export const departmentController = {
   createProgram,
   getDepartment,
+  deleteDepartment,
 };

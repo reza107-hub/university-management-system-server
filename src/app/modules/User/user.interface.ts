@@ -1,6 +1,6 @@
 export type TUser = {
   email: string;
-  role: string;
+  role: 'user' | 'student' | 'faculty' | 'admin';
   hasAdditionalInfo: boolean;
   isDeleted: boolean;
 };
