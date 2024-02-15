@@ -43,8 +43,24 @@ const postUserAdditionalInformation = catchAsync(async (req, res) => {
   });
 });
 
+const updateUsersAdditionalInformation = catchAsync(async (req, res) => {
+  const result =
+    await usersAdditionalInformationService.updateUsersAdditionalInformationToDb(
+      req.params.id,
+      req.body,
+    );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Information Updated successfully',
+    data: result,
+  });
+});
+
 export const UserAdditionalInformationController = {
   getIsUserHasAdditionalInformation,
   postUserAdditionalInformation,
   getPresentUserHasAdditionalInformation,
+  updateUsersAdditionalInformation,
 };
