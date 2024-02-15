@@ -7,6 +7,7 @@ const Name = new Schema<TName>({
 });
 const admissionSchema = new Schema<TAdmission>(
   {
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
     name: {
       type: Name,
       required: true,
@@ -24,8 +25,17 @@ const admissionSchema = new Schema<TAdmission>(
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
     bloodGroup: { type: String, required: true },
-    programme: { type: String, required: true },
-    department: { type: String, required: true },
+    program: { type: Schema.Types.ObjectId, required: true, ref: 'program' },
+    department: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'department',
+    },
+    semester: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'SemesterRegistration',
+    },
     batch: { type: Number, required: true },
     yearOfRegistration: { type: String, required: true },
     nationality: { type: String, required: true },

@@ -4,11 +4,12 @@ import { SemesterRegistrationStatus } from './semesterRegistration.constant';
 const createSemesterRegistrationValidationSchema = z.object({
   body: z.object({
     academicSemester: z.string(),
-    status: z.enum([...(SemesterRegistrationStatus as [string, ...string[]])]),
-    startDate: z.string().datetime(),
-    endDate: z.string().datetime(),
-    minCredit: z.number(),
-    maxCredit: z.number(),
+    minCredit: z.number().refine((value) => value >= 1.5 && value <= 10, {
+      message: 'minCredit must be between 3 and 10',
+    }),
+    maxCredit: z.number().refine((value) => value >= 10 && value <= 23, {
+      message: 'maxCredit must be between 10 and 23',
+    }),
   }),
 });
 
@@ -18,10 +19,18 @@ const updateSemesterRegistrationValidationSchema = z.object({
     status: z
       .enum([...(SemesterRegistrationStatus as [string, ...string[]])])
       .optional(),
-    startDate: z.string().datetime().optional(),
-    endDate: z.string().datetime().optional(),
-    minCredit: z.number().optional(),
-    maxCredit: z.number().optional(),
+    minCredit: z
+      .number()
+      .refine((value) => value >= 1.5 && value <= 10, {
+        message: 'minCredit must be between 3 and 10',
+      })
+      .optional(),
+    maxCredit: z
+      .number()
+      .refine((value) => value >= 10 && value <= 23, {
+        message: 'maxCredit must be between 10 and 23',
+      })
+      .optional(),
   }),
 });
 

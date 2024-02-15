@@ -1,9 +1,12 @@
+import { Types } from 'mongoose';
+
 export type TName = {
   firstName: string;
   lastName: string;
 };
 
 export type TAdmission = {
+  userId: Types.ObjectId;
   name: TName;
   fatherName: string;
   fatherOccupation: string;
@@ -18,8 +21,9 @@ export type TAdmission = {
   presentAddress: string;
   permanentAddress: string;
   bloodGroup: string;
-  programme: string;
-  department: string;
+  program: Types.ObjectId;
+  department: Types.ObjectId;
+  semester: Types.ObjectId;
   batch: number;
   yearOfRegistration: string;
   nationality: string;

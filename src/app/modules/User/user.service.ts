@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-import { ObjectId } from "mongodb"
-import User from "./user.model"
-import { TUser } from "./user.interface"
-import AppError from "../../error/AppError"
-import httpStatus from "http-status"
-import { searchByNameInDB } from "../../utils/searchByname"
-=======
 import { ObjectId } from 'mongodb';
 import User from './user.model';
 import { TUser } from './user.interface';
 import AppError from '../../error/AppError';
 import httpStatus from 'http-status';
->>>>>>> 33cbfdc059c3e8c489179651498840f4e924fca9
+import { searchByNameInDB } from '../../utils/searchByname';
 
 const createUserIntoDB = async (user: TUser) => {
   const query = { email: user.email };
@@ -23,15 +15,17 @@ const createUserIntoDB = async (user: TUser) => {
   return result;
 };
 
-const getUsersFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
-    const users =  User.find()
-   
-    const search = searchByNameInDB(query)
-    const result = await users.find(search)
+const getUsersFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const users = User.find();
 
-    return result
-}
+  const search = searchByNameInDB(query);
+  const result = await users.find(search);
+
+  return result;
+};
 
 const getPresentUserFromDB = async (email: string) => {
   const result = await User.findOne({ email });
