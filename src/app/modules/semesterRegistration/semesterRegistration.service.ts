@@ -10,7 +10,6 @@ import AppError from '../../error/AppError';
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
 ) => {
-
   const academicSemester = payload?.academicSemester;
 
   //check if there any registered semester that is already 'UPCOMING'|'ONGOING'
@@ -55,8 +54,21 @@ const createSemesterRegistrationIntoDB = async (
   return result;
 };
 
+const getAllSemesterRegistrationFromDb = async () => {
+  const result = await SemesterRegistration.find().populate('academicSemester');
+  return result;
+};
+
+const updateStatusToDb = async (
+  id: string,
+  status: Partial<TSemesterRegistration>,
+) => {
+  const result = await SemesterRegistration.findByIdAndUpdate(id, status);
+  return result;
+};
 
 export const SemesterRegistrationService = {
   createSemesterRegistrationIntoDB,
-
+  getAllSemesterRegistrationFromDb,
+  updateStatusToDb,
 };

@@ -15,21 +15,13 @@ const semesterRegistrationSchema = new mongoose.Schema<TSemesterRegistration>(
       enum: SemesterRegistrationStatus,
       default: 'UPCOMING',
     },
-    startDate: {
-      type: Date,
-      required: true,
-    },
-    endDate: {
-      type: Date,
-      required: true,
-    },
     minCredit: {
       type: Number,
       default: 3,
     },
     maxCredit: {
       type: Number,
-      default: 15,
+      default: 23,
     },
   },
   {

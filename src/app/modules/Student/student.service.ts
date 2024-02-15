@@ -1,62 +1,98 @@
 /* eslint-disable prefer-const */
-import Admission from "../AdmissionRequest/adminRequest.model";
-import { TStudent } from "./student.interface";
-import Student from "./student.model";
+import Admission from '../AdmissionRequest/adminRequest.model';
+import Department from '../Department/department.model';
+import User from '../User/user.model';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { TStudent } from './student.interface';
+import Student from './student.model';
 
+type TDenyStudent = {
+  id: string;
+  email: string;
+  text: string;
+};
 
 const getAllStudentFromDB = async () => {
-    const result = await Student.find();
-    return result;
-}
+  const result = await Student.find();
+  return result;
+};
 
-const creatingStudentWIthIdIntoDB = async (details:TStudent) => {
+const creatingStudentWIthIdIntoDB = async (payload: TStudent) => {
+  const admissionRequest = await Admission.findById(
+    payload?.admissionRequestId,
+  );
+  if (!admissionRequest) {
+    throw new Error('Admission Request not found');
+  }
 
-    const date = new Date();
-    const currentMonth = date.getMonth() + 1;
-    const lastTwoDigitsOfYear = (Number(details?.yearOfRegistration) % 100);
+  const semesterRegistration = await SemesterRegistration.findById(
+    admissionRequest.semester,
+  );
 
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const department = details?.department;
+  if (!semesterRegistration) {
+    throw new Error('semesterRegistration not found');
+  }
 
-    const lastStudent = await Student
-      .find({}, { studentId: 1, _id: 0 })
-      .sort({ studentId: -1 })
-      .limit(1);
+  const academicSemester = await AcademicSemester.findById(
+    semesterRegistration?.academicSemester,
+  );
 
-    const lastStudentId = lastStudent[0]?.studentId || '000-000-000';
+  if (!academicSemester) {
+    throw new Error('academicSemester not found');
+  }
 
-    let currentId = '000';
-    let currentStudentYear = lastTwoDigitsOfYear.toString();
-    let lastStudentYear = lastStudentId?.substring(0, 2);
-    let currentSemesterCode = (currentMonth == 12 || currentMonth == 1 || currentMonth == 2) ? '1' : '2';
-    let lastStudentSemesterCode = lastStudentId?.substring(2, 3);
-    let currentDeptCode = (details?.department === 'CSE') ? '115' : '116';
-    let lastStudentDeptCode = lastStudentId?.substring(4, 7);
+  const departmentCode = await Department.findById(
+    admissionRequest.department,
+    { code: 1, _id: 0 },
+  );
+  const lastTwoDigitsOfYear =
+    Number(admissionRequest?.yearOfRegistration) % 100;
+  const lastStudent = await Student.find({}, { studentId: 1, _id: 0 })
+    .sort({ studentId: -1 })
+    .limit(1);
+  const lastStudentId = lastStudent[0]?.studentId || '000-000-000';
+  let currentId = '000';
+  let currentStudentYear = lastTwoDigitsOfYear.toString();
+  let lastStudentYear = lastStudentId?.substring(0, 2);
 
-    if (
-      lastStudentYear === currentStudentYear &&
-      lastStudentSemesterCode === currentSemesterCode &&
-      lastStudentDeptCode === currentDeptCode
-    ) {
-      currentId = lastStudentId.substring(8);
-    }
+  let currentSemesterCode = academicSemester?.code.substring(1);
 
-    let incrementId = (Number(currentId) + 1).toString().padStart(3, '0');
-    let finalId = currentStudentYear + currentSemesterCode + '-' + currentDeptCode + '-' + incrementId;
+  let lastStudentSemesterCode = lastStudentId?.substring(2, 3);
+  let currentDeptCode = departmentCode!.code;
+  let lastStudentDeptCode = lastStudentId?.substring(4, 7);
+  if (
+    lastStudentYear === currentStudentYear &&
+    lastStudentSemesterCode === currentSemesterCode &&
+    lastStudentDeptCode === currentDeptCode
+  ) {
+    currentId = lastStudentId.substring(8);
+  }
+  let incrementId = (Number(currentId) + 1).toString().padStart(3, '0');
+  let finalId =
+    currentStudentYear +
+    currentSemesterCode +
+    '-' +
+    currentDeptCode +
+    '-' +
+    incrementId;
+  payload.studentId = finalId;
+  const result = await Student.create(payload);
+  if (result) {
+    const id = result.admissionRequestId;
+    const userId = admissionRequest.userId;
+    await Admission.findByIdAndUpdate(id, { isApproved: true });
+    await User.findByIdAndUpdate(userId, { role: 'student' });
+  }
+  return result;
+};
 
-    details.studentId = finalId;
-
-    const result = await Student.create(details);
-
-    if (result._id) {
-      await Admission.findByIdAndDelete(details?._id);
-    }
-
-    return result;
-}
-
+const denyStudent = async (payload: TDenyStudent) => {
+  console.log(payload);
+};
 
 export const studentService = {
-    getAllStudentFromDB,
-    creatingStudentWIthIdIntoDB
-}
+  getAllStudentFromDB,
+  creatingStudentWIthIdIntoDB,
+  denyStudent,
+};
