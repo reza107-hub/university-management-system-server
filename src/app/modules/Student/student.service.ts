@@ -1,4 +1,5 @@
 /* eslint-disable prefer-const */
+import { sendEmail } from '../../utils/sendEmail';
 import Admission from '../AdmissionRequest/adminRequest.model';
 import Department from '../Department/department.model';
 import User from '../User/user.model';
@@ -88,7 +89,13 @@ const creatingStudentWIthIdIntoDB = async (payload: TStudent) => {
 };
 
 const denyStudent = async (payload: TDenyStudent) => {
-  console.log(payload);
+  const subject = `Admission for Metropolitan University`;
+  const res = await sendEmail(payload.email, subject, payload.text);
+  let result;
+  if (res.accepted.length > 0) {
+    result = await Admission.findByIdAndDelete(payload.id);
+  }
+  return result;
 };
 
 export const studentService = {

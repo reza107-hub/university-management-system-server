@@ -1,8 +1,7 @@
 import nodemailer from 'nodemailer';
 import config from '../config';
-// import config from '../config';
 
-export const receiveEmail = async (
+export const sendEmail = async (
   to: string,
   subject: string,
   message: string,
@@ -18,20 +17,13 @@ export const receiveEmail = async (
       },
     });
 
-    // console.log(from)
-
-    await transporter.sendMail({
+    const res = await transporter.sendMail({
       from: 'finalyearproject147@gmail.com',
       to,
       subject: subject,
       text: message,
-      html: `<div>
-      <p> ${message}</p>
-      <p>from : ${to}</p>
-     </div>`,
     });
-
-    console.log('Email sent successfully');
+    return res;
   } catch (error) {
     console.error('Error sending email:', error);
     throw new Error('Failed to send email');

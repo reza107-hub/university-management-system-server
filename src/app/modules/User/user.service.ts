@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import User from './user.model';
 import { TUser } from './user.interface';
 import AppError from '../../error/AppError';
@@ -34,27 +33,18 @@ const getPresentUserFromDB = async (email: string) => {
   return result;
 };
 
-const makeStudentIntoDB = async (id: string) => {
-  const filter = { _id: new ObjectId(id) };
-  const updateDoc = {
-    $set: {
-      role: 'student',
-    },
-  };
-  const result = await User.findByIdAndUpdate(filter, updateDoc);
-  return result;
+const sendContactEmailService = async (
+  email: string,
+  subject: string,
+  message: string,
+) => {
+  console.log({ email, subject, message });
+  await receiveEmail(email, subject, message);
 };
-
-
-const sendContactEmailService = async (email:string,subject:string , message:string)=>{
-  console.log({email,subject,message})
-  await receiveEmail(email,subject,message)
-}
 
 export const userService = {
   getUsersFromDB,
-  makeStudentIntoDB,
   createUserIntoDB,
   getPresentUserFromDB,
-  sendContactEmailService
+  sendContactEmailService,
 };
