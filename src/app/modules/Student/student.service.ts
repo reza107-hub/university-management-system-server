@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { sendEmail } from '../../utils/sendEmail';
-import Admission from '../AdmissionRequest/adminRequest.model';
+import Admission from '../AdmissionRequest/admissionRequest.model';
 import Department from '../Department/department.model';
 import User from '../User/user.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -79,11 +79,17 @@ const creatingStudentWIthIdIntoDB = async (payload: TStudent) => {
     incrementId;
   payload.studentId = finalId;
   const result = await Student.create(payload);
+
   if (result) {
     const id = result.admissionRequestId;
     const userId = admissionRequest.userId;
     await Admission.findByIdAndUpdate(id, { isApproved: true });
     await User.findByIdAndUpdate(userId, { role: 'student' });
+    sendEmail(
+      admissionRequest.email,
+      'Your Admission Requested Approved',
+      `Congratulations! Your Admission Requested at Metropolitan University has been approved. Your Student Id is ${result.studentId}`,
+    );
   }
   return result;
 };

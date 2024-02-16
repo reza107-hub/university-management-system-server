@@ -1,9 +1,8 @@
 import nodemailer from 'nodemailer';
 import config from '../config';
-// import config from '../config';
 
 export const receiveEmail = async (
-  to: string,
+  from: string,
   subject: string,
   message: string,
 ) => {
@@ -18,16 +17,14 @@ export const receiveEmail = async (
       },
     });
 
-    // console.log(from)
-
     await transporter.sendMail({
-      from: 'finalyearproject147@gmail.com',
-      to,
+      from,
+      to: 'finalyearproject147@gmail.com',
       subject: subject,
       text: message,
       html: `<div>
       <p> ${message}</p>
-      <p>from : ${to}</p>
+      <p>from : ${from}</p>
      </div>`,
     });
 

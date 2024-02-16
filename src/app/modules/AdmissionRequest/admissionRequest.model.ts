@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TAdmission, TName } from './adminRequest.interface';
+import { TAdmission, TName } from './admissionRequest.interface';
 
 const Name = new Schema<TName>({
   firstName: { type: String, required: true },
@@ -50,6 +50,5 @@ const admissionSchema = new Schema<TAdmission>(
 );
 
 const Admission = model<TAdmission>('admissionRequest', admissionSchema);
-//admissionRequestCollection
 
 export default Admission;

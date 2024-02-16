@@ -3,7 +3,7 @@ import { userRouter } from "../modules/User/user.route";
 import { usersAdditionalInformationRoute } from "../modules/usersAdditionalInformation/usersAdditionalInformation.route";
 import { adminRouter } from "../modules/Admin/admin.route";
 import { studentRouter } from "../modules/Student/student.route";
-import { AdmissionRequestRoute } from "../modules/AdmissionRequest/adminRequest.route";
+import { AdmissionRequestRoute } from "../modules/AdmissionRequest/admissionRequest.route";
 import { programRoute } from "../modules/Program/program.route";
 import { DepartmentRoute } from "../modules/Department/department.route";
 import { semesterRegistrationRoutes } from "../modules/semesterRegistration/semesterRegistration.route";
