@@ -15,7 +15,25 @@ type TDenyStudent = {
 };
 
 const getAllStudentFromDB = async () => {
-  const result = await Student.find();
+  const result = await Student.find()
+    .populate({
+      path: 'admissionRequestId',
+      populate: {
+        path: 'department',
+        model: 'department',
+      },
+    })
+    .populate({
+      path: 'admissionRequestId',
+      populate: {
+        path: 'semester',
+        model: 'SemesterRegistration',
+        populate: {
+          path: 'academicSemester',
+          model: 'AcademicSemester',
+        },
+      },
+    });
   return result;
 };
 
