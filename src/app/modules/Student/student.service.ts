@@ -1,4 +1,6 @@
 /* eslint-disable prefer-const */
+
+import { searchByIdInDB } from '../../utils/searchByIdInDB';
 import { sendEmail } from '../../utils/sendEmail';
 import Admission from '../AdmissionRequest/admissionRequest.model';
 import Department from '../Department/department.model';
@@ -14,26 +16,28 @@ type TDenyStudent = {
   text: string;
 };
 
-const getAllStudentFromDB = async () => {
-  const result = await Student.find()
-    .populate({
-      path: 'admissionRequestId',
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getAllStudentFromDB = async (query: Record<string, any>) => {
+  const students = Student.find()
+  const search = searchByIdInDB(query);
+  const result = await students.find(search).populate({
+    path: 'admissionRequestId',
+    populate: {
+      path: 'department',
+      model: 'department',
+    },
+  }).populate({
+    path: 'admissionRequestId',
+    populate: {
+      path: 'semester',
+      model: 'SemesterRegistration',
       populate: {
-        path: 'department',
-        model: 'department',
+        path: 'academicSemester',
+        model: 'AcademicSemester',
       },
-    })
-    .populate({
-      path: 'admissionRequestId',
-      populate: {
-        path: 'semester',
-        model: 'SemesterRegistration',
-        populate: {
-          path: 'academicSemester',
-          model: 'AcademicSemester',
-        },
-      },
-    });
+    },
+  });
+
   return result;
 };
 
