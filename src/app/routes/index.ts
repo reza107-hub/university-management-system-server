@@ -11,6 +11,7 @@ import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSeme
 import { batchRoute } from '../modules/batch/batch.route';
 import { FacultyRouter } from '../modules/Faculty/faculty.route';
 import { CourseRoutes } from '../modules/Course/course.route';
+import { offeredCourseRoutes } from '../modules/OfferedCourse/OfferedCourse.route';
 
 const router = Router();
 
@@ -62,6 +63,10 @@ const moduleRoutes = [
   {
     path: '/course',
     route: CourseRoutes,
+  },
+  {
+    path: '/offered-course',
+    route: offeredCourseRoutes,
   },
 ];
 
