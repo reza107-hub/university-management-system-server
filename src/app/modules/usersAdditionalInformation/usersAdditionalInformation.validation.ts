@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const UserAdditionalInformationValidationSchema = z.object({
   body: z.object({
@@ -17,5 +17,5 @@ const UserAdditionalInformationValidationSchema = z.object({
 });
 
 export const userAdditionalInformationValidation = {
-  UserAdditionalInformationValidationSchema
-}
+  UserAdditionalInformationValidationSchema,
+};

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
-
 const adminValidationSchema = z.object({
-   body:z.object({
+  body: z.object({
     image: z.string(),
     name: z.string(),
     email: z.string().email(),
@@ -13,11 +12,9 @@ const adminValidationSchema = z.object({
     permanentAddress: z.string(),
     bloodGroup: z.string(),
     isDeleted: z.boolean().default(false),
-   })
+  }),
 });
 
-
 export const adminValidation = {
-    adminValidationSchema
-  };
-
+  adminValidationSchema,
+};

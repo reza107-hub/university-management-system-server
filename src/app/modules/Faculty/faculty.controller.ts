@@ -2,7 +2,6 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { FacultyService } from './faculty.service';
 
-
 const getFacultyList = catchAsync(async (req, res) => {
   const result = await FacultyService.getFacultyListFromDB(req.query);
 
@@ -51,6 +50,5 @@ const deleteFaculty = catchAsync(async (req, res) => {
 export const FacultyController = {
   getFacultyList,
   createFaculty,
-  deleteFaculty
-
+  deleteFaculty,
 };

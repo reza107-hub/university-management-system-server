@@ -18,15 +18,15 @@ const createDepartmentIntoDB = async (payload: TDepartment) => {
   return result;
 };
 
-const getDepartmentFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
-  const departments = Department.find({ isDeleted: false })
+const getDepartmentFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const departments = Department.find({ isDeleted: false });
 
-  const search = searchByNameInDB(query)
+  const search = searchByNameInDB(query);
 
-  const result = await departments.find(search).populate(
-    'program',
-  );
+  const result = await departments.find(search).populate('program');
   return result;
 };
 

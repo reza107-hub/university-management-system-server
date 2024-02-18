@@ -18,25 +18,28 @@ type TDenyStudent = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getAllStudentFromDB = async (query: Record<string, any>) => {
-  const students = Student.find()
+  const students = Student.find();
   const search = searchByIdInDB(query);
-  const result = await students.find(search).populate({
-    path: 'admissionRequestId',
-    populate: {
-      path: 'department',
-      model: 'department',
-    },
-  }).populate({
-    path: 'admissionRequestId',
-    populate: {
-      path: 'semester',
-      model: 'SemesterRegistration',
+  const result = await students
+    .find(search)
+    .populate({
+      path: 'admissionRequestId',
       populate: {
-        path: 'academicSemester',
-        model: 'AcademicSemester',
+        path: 'department',
+        model: 'department',
       },
-    },
-  });
+    })
+    .populate({
+      path: 'admissionRequestId',
+      populate: {
+        path: 'semester',
+        model: 'SemesterRegistration',
+        populate: {
+          path: 'academicSemester',
+          model: 'AcademicSemester',
+        },
+      },
+    });
 
   return result;
 };
