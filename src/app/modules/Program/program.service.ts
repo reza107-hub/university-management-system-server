@@ -14,11 +14,13 @@ const createProgramIntoDB = async (payload: TProgram) => {
   return result;
 };
 
-const getAllProgramsFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
-  const programs =  Program.find({ isDeleted: false });
-  const search = searchByNameInDB(query)
-  const result = await programs.find(search)
+const getAllProgramsFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const programs = Program.find({ isDeleted: false });
+  const search = searchByNameInDB(query);
+  const result = await programs.find(search);
   return result;
 };
 

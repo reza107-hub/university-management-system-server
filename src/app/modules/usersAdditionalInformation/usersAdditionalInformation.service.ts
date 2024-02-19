@@ -5,12 +5,14 @@ import httpStatus from 'http-status';
 import usersAdditionalInformationModel from './usersAdditionalInformation.model';
 import { searchByNameInDB } from '../../utils/searchByname';
 
-const getIsUserHasAdditionalInformationFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
-  const result1 = usersAdditionalInformationModel.find()
-   
-    const search = searchByNameInDB(query)
-    const result = await result1.find(search).populate('userId');
+const getIsUserHasAdditionalInformationFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const result1 = usersAdditionalInformationModel.find();
+
+  const search = searchByNameInDB(query);
+  const result = await result1.find(search).populate('userId');
   return result;
 };
 

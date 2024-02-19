@@ -35,8 +35,12 @@ const getPresentUser = catchAsync(async (req, res) => {
   });
 });
 const sendContactEmail = catchAsync(async (req, res) => {
-  const {email,subject,message}= req.body
-  const result = await userService.sendContactEmailService(email,subject,message);
+  const { email, subject, message } = req.body;
+  const result = await userService.sendContactEmailService(
+    email,
+    subject,
+    message,
+  );
 
   sendResponse(res, {
     success: true,
@@ -46,10 +50,9 @@ const sendContactEmail = catchAsync(async (req, res) => {
   });
 });
 
-
 export const userController = {
   getUsers,
   createUser,
   getPresentUser,
-  sendContactEmail
+  sendContactEmail,
 };

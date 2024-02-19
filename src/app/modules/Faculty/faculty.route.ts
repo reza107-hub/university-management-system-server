@@ -6,17 +6,16 @@ import { FacultyController } from './faculty.controller';
 
 const router = express.Router();
 
-router.get('/faculty-list',FacultyController.getFacultyList);
+router.get('/faculty-list', FacultyController.getFacultyList);
 
 router.post(
   '/create-faculty',
   validateRequest(FacultyValidation.facultyValidationSchema),
-  FacultyController.createFaculty
-  
+  FacultyController.createFaculty,
 );
 
 // router.get('/:email', AdminController.getUserIsAdmin);
 
-router.patch('/delete-faculty',FacultyController.deleteFaculty);
+router.patch('/delete-faculty', FacultyController.deleteFaculty);
 
 export const FacultyRouter = router;
