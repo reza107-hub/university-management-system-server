@@ -14,8 +14,9 @@ const getAllAdmissionRequest = catchAsync(async (req, res) => {
 });
 
 const getSingleAdmissionRequest = catchAsync(async (req, res) => {
-  const result =
-    await AdmissionRequestService.getSingleAdmissionRequestFromDB(req.params.id);
+  const result = await AdmissionRequestService.getSingleAdmissionRequestFromDB(
+    req.params.id,
+  );
 
   sendResponse(res, {
     success: true,

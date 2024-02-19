@@ -8,29 +8,23 @@ import Faculty from './faculty.model';
 import { TFaculty } from './faculty.interface';
 import { searchByNameInDB } from '../../utils/searchByname';
 
-const getFacultyListFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>,) => {
-
-  const faculties =  Faculty.find({ isDeleted: false });
-  const search = searchByNameInDB(query)
-  const result = await faculties.find(search).populate('userId');
+const getFacultyListFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const faculties = Faculty.find({ isDeleted: false });
+  const search = searchByNameInDB(query);
+  const result = await faculties.find(search).populate('userId').populate('userAdditionalInfoId').populate('departmentId');
   return result;
 };
 
 const createFacultyIntoDB = async (playLoad: TFaculty) => {
-  const {
-    userId: { _id: userId },
-    _id,
-    ...newObject
-  } = playLoad;
-
-  const data = { userId, ...newObject };
-
-  const existingFaculty = await Faculty.findOne({ userId });
+ const {userId} = playLoad
+  const existingFaculty = await Faculty.findOne({userId});
   if (existingFaculty) {
     throw new AppError(httpStatus.FORBIDDEN, 'Faculty Already exists');
   }
-  const result = await Faculty.create(data);
+  const result = await Faculty.create(playLoad);
   await User.findByIdAndUpdate(userId, { role: 'faculty' });
   return result;
 };
@@ -61,6 +55,5 @@ const deleteFacultyFromDb = async (playLoad: TFaculty) => {
 export const FacultyService = {
   getFacultyListFromDB,
   createFacultyIntoDB,
-  deleteFacultyFromDb
-
+  deleteFacultyFromDb,
 };

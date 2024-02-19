@@ -4,7 +4,9 @@ import { usersAdditionalInformationService } from './usersAdditionalInformation.
 
 const getIsUserHasAdditionalInformation = catchAsync(async (req, res) => {
   const result =
-    await usersAdditionalInformationService.getIsUserHasAdditionalInformationFromDB(req.query);
+    await usersAdditionalInformationService.getIsUserHasAdditionalInformationFromDB(
+      req.query,
+    );
 
   sendResponse(res, {
     success: true,

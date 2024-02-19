@@ -22,12 +22,14 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   return result;
 };
 
-const getAllAcademicSemestersFromDB = async (// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
+const getAllAcademicSemestersFromDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
   const academicSemesters = AcademicSemester.find();
-  const search = searchByNameInDB(query)
+  const search = searchByNameInDB(query);
 
-const result = await academicSemesters.find(search)
+  const result = await academicSemesters.find(search);
   return result;
 };
 

@@ -1,10 +1,10 @@
-export const searchByNameInDB = (
+export const searchByIdInDB = (
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: Record<string, any>,
 ) => {
   let search = {};
-  if (query.name) {
-    search = { name: { $regex: query.name, $options: 'i' } };
+  if (query.studentId) {
+    search = { studentId: { $regex: query.studentId, $options: 'i' } };
   }
   return search;
 };

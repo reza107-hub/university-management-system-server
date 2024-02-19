@@ -1,58 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
 import { TFaculty } from './faculty.interface';
 
-
 const facultySchema = new Schema<TFaculty>(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'user',
     },
-    name: {
-      type: String,
-      required: true,
+    userAdditionalInfoId:{
+      type: Schema.Types.ObjectId,
+      ref:'usersAdditionalInformation'
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
+    departmentId:{
+      type: Schema.Types.ObjectId,
+      ref:'department'
     },
-    image: {
-      type: String,
-      required: true,
-    },
-
-    role: {
-      type: String,
-    },
-    gender: {
-      type: String,
-      required: true,
-    },
-    dateOfBirth: {
-      type: String,
-      required: true,
-    },
-    contactNumber: {
-      type: String,
-      required: true,
-    },
-    presentAddress: {
-      type: String,
-      required: true,
-    },
-    permanentAddress: {
-      type: String,
-      required: true,
-    },
-    bloodGroup: {
-      type: String,
-      required: true,
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+    designation:{
+      type:String,
+      required:true
+    }
   },
   {
     timestamps: true,

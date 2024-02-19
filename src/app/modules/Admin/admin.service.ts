@@ -8,15 +8,15 @@ import User from '../User/user.model';
 import { searchByNameInDB } from '../../utils/searchByname';
 
 const getAdminListFromDB = async (
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-query: Record<string, any>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: Record<string, any>,
+) => {
+  const admins = Admin.find({ isDeleted: false });
 
-const admins =  Admin.find({ isDeleted: false })
+  const search = searchByNameInDB(query);
 
-const search = searchByNameInDB(query)
+  const result = await admins.find(search).populate('userId');
 
-const result = await admins.find(search).populate('userId');
- 
   return result;
 };
 

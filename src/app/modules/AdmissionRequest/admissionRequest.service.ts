@@ -12,7 +12,7 @@ const getAllAdmissionRequestFromDB = async () => {
   return result;
 };
 
-const getSingleAdmissionRequestFromDB = async (id:string) => {
+const getSingleAdmissionRequestFromDB = async (id: string) => {
   const result = await Admission.findById(id)
     .populate('program')
     .populate('department')
