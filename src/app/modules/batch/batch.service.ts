@@ -26,7 +26,7 @@ const updateBatchIntoDB = async (_id: any, payload: TBatch) => {
 };
 
 const getAllBatchFromDB = async () => {
-  const result = await Batch.find();
+  const result = await Batch.find().populate('deptId');
   return result;
 };
 
