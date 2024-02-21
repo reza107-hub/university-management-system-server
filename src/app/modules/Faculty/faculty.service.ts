@@ -12,15 +12,19 @@ const getFacultyListFromDB = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: Record<string, any>,
 ) => {
-  const faculties = Faculty.find({ isDeleted: false });
+  const faculties = Faculty.find();
   const search = searchByNameInDB(query);
-  const result = await faculties.find(search).populate('userId').populate('userAdditionalInfoId').populate('departmentId');
+  const result = await faculties
+    .find(search)
+    .populate('userId')
+    .populate('userAdditionalInfoId')
+    .populate('departmentId');
   return result;
 };
 
 const createFacultyIntoDB = async (playLoad: TFaculty) => {
- const {userId} = playLoad
-  const existingFaculty = await Faculty.findOne({userId});
+  const { userId } = playLoad;
+  const existingFaculty = await Faculty.findOne({ userId });
   if (existingFaculty) {
     throw new AppError(httpStatus.FORBIDDEN, 'Faculty Already exists');
   }
@@ -28,17 +32,6 @@ const createFacultyIntoDB = async (playLoad: TFaculty) => {
   await User.findByIdAndUpdate(userId, { role: 'faculty' });
   return result;
 };
-
-// const getUserIsAdminFromDb = async (email: string) => {
-//   const result = await Admin.findOne({ email });
-//   if (!result) {
-//     return false;
-//   }
-//   if (result?.isDeleted === true) {
-//     return false;
-//   }
-//   return true;
-// };
 
 const deleteFacultyFromDb = async (playLoad: TFaculty) => {
   const { _id, userId } = playLoad;
