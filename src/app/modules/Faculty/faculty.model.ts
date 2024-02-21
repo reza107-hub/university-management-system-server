@@ -3,22 +3,26 @@ import { TFaculty } from './faculty.interface';
 
 const facultySchema = new Schema<TFaculty>(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'user',
     },
-    userAdditionalInfoId:{
+    userAdditionalInfoId: {
       type: Schema.Types.ObjectId,
-      ref:'usersAdditionalInformation'
+      ref: 'usersAdditionalInformation',
     },
-    departmentId:{
+    departmentId: {
       type: Schema.Types.ObjectId,
-      ref:'department'
+      ref: 'department',
     },
-    designation:{
-      type:String,
-      required:true
-    }
+    designation: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

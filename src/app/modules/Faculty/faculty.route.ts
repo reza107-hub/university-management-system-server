@@ -14,8 +14,6 @@ router.post(
   FacultyController.createFaculty,
 );
 
-// router.get('/:email', AdminController.getUserIsAdmin);
-
 router.patch('/delete-faculty', FacultyController.deleteFaculty);
 
 export const FacultyRouter = router;
