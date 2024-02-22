@@ -34,23 +34,17 @@ const getSingleCourseFromDB = async (id: string) => {
 };
 
 const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
-  const { ...courseRemainingData } = payload;
-
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
 
     //step1: basic course info update
-    const updatedBasicCourseInfo = await Course.findByIdAndUpdate(
-      id,
-      courseRemainingData,
-      {
-        new: true,
-        runValidators: true,
-        session,
-      },
-    );
+    const updatedBasicCourseInfo = await Course.findByIdAndUpdate(id, payload, {
+      new: true,
+      runValidators: true,
+      session,
+    });
 
     if (!updatedBasicCourseInfo) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');

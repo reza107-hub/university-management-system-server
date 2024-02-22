@@ -1,15 +1,14 @@
-import httpStatus from "http-status";
-import AppError from "../../error/AppError";
-import { SemesterRegistration } from "../semesterRegistration/semesterRegistration.model";
-import { TOfferedCourse } from "./OfferedCourse.interface";
-import Program from "../Program/program.model";
-import Department from "../Department/department.model";
-import { Course } from "../Course/course.model";
-import Faculty from "../Faculty/faculty.model";
-import { OfferedCourse } from "./OfferedCourse.model";
-import { hasTimeConflict } from "./OfferedCourse.utils";
-import QueryBuilder from "../../builder/QueryBuilder";
-
+import httpStatus from 'http-status';
+import AppError from '../../error/AppError';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { TOfferedCourse } from './OfferedCourse.interface';
+import Program from '../Program/program.model';
+import Department from '../Department/department.model';
+import { Course } from '../Course/course.model';
+import Faculty from '../Faculty/faculty.model';
+import { OfferedCourse } from './OfferedCourse.model';
+import { hasTimeConflict } from './OfferedCourse.utils';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -38,8 +37,9 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
    */
 
   //check if the semester registration id is exists!
-  const isSemesterRegistrationExits =
-    await SemesterRegistration.findById(semesterRegistrationId);
+  const isSemesterRegistrationExits = await SemesterRegistration.findById(
+    semesterRegistrationId,
+  );
 
   if (!isSemesterRegistrationExits) {
     throw new AppError(
@@ -50,15 +50,13 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
   const academicSemester = isSemesterRegistrationExits.academicSemester;
 
-  const isProgramExits =
-    await Program.findById(programId);
+  const isProgramExits = await Program.findById(programId);
 
   if (!isProgramExits) {
     throw new AppError(httpStatus.NOT_FOUND, 'Program not found !');
   }
 
-  const isAcademicDepartmentExits =
-    await Department.findById(departmentId);
+  const isAcademicDepartmentExits = await Department.findById(departmentId);
 
   if (!isAcademicDepartmentExits) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic Department not found !');
@@ -180,7 +178,6 @@ const updateOfferedCourseIntoDB = async (
 
   const semesterRegistration = isOfferedCourseExists.semesterRegistrationId;
   // get the schedules of the faculties
-
 
   // Checking the status of the semester registration
   const semesterRegistrationStatus =
