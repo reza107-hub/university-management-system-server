@@ -9,4 +9,6 @@ export default {
   NODE_ENV: process.env.NODE_ENV,
   EMAIL: process.env.EMAIL,
   EMAIL_PASS: process.env.EMAIL_PASS,
+  SSLCOMMERZ_STORE_ID: process.env.SSLCOMMERZ_STORE_ID,
+  SSLCOMMERZ_STORE_PASS: process.env.SSLCOMMERZ_STORE_PASS,
 };
