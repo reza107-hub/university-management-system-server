@@ -18,7 +18,7 @@ const updateCourseValidationSchema = z.object({
   body: z.object({
     title: z.string().optional(),
     prefix: z.string().optional(),
-    code: z.number().optional(),
+    code: z.string().optional(),
     credits: z.number().optional(),
     preRequisiteCourses: z
       .array(updatePreRequisiteCourseValidationSchema)
