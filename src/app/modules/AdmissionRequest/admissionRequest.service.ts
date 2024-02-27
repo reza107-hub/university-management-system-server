@@ -20,14 +20,15 @@ const getSingleAdmissionRequestFromDB = async (id: string) => {
   return result;
 };
 
-const postAdmissionRequestToDB = async (data: TAdmission) => {
-  const existingData = await Admission.findOne({ email: data.email });
+const postAdmissionRequestToDB = async (payload: TAdmission) => {
+  const existingData = await Admission.findOne({ email: payload.email });
   if (existingData) {
     throw new AppError(httpStatus.FORBIDDEN, 'Already requested for admission');
   }
-  const result = await Admission.create(data);
+
+  const result = await Admission.create(payload);
   if (result) {
-    receiveEmail(
+    await receiveEmail(
       `${result.email}`,
       'Admission Request Posted',
       `An Admission Requested From ${result.email}`,
