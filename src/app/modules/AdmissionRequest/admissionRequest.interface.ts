@@ -24,7 +24,7 @@ export type TAdmission = {
   program: Types.ObjectId;
   department: Types.ObjectId;
   semester: Types.ObjectId;
-  batch: number;
+  batch: Types.ObjectId;
   yearOfRegistration: string;
   nationality: string;
   profileImage: string;

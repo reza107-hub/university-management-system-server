@@ -36,7 +36,7 @@ const admissionSchema = new Schema<TAdmission>(
       required: true,
       ref: 'SemesterRegistration',
     },
-    batch: { type: Number, required: true },
+    batch: { type: Schema.Types.ObjectId, required: true, ref: 'batch' },
     yearOfRegistration: { type: String, required: true },
     nationality: { type: String, required: true },
     profileImage: { type: String, required: true },

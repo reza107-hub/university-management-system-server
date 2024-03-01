@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { TBatch } from './batch.interface';
+import { TBatch, TSection } from './batch.interface';
 
 const batchSchema = new Schema<TBatch>(
   {
@@ -20,5 +20,18 @@ const batchSchema = new Schema<TBatch>(
   },
 );
 
+const sectionSchema = new Schema<TSection>(
+  {
+    batchId: { type: Schema.Types.ObjectId },
+    capacity: { type: Number, default: 1 },
+    name: { type: String, required: true },
+    student_ids: [{ type: String }],
+  },
+  {
+    timestamps: true,
+  },
+);
+
+export const SectionModel = mongoose.model<TSection>('Section', sectionSchema);
 const Batch = mongoose.model<TBatch>('batch', batchSchema);
 export default Batch;

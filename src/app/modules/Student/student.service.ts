@@ -6,6 +6,7 @@ import Admission from '../AdmissionRequest/admissionRequest.model';
 import Department from '../Department/department.model';
 import User from '../User/user.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import Batch, { SectionModel } from '../batch/batch.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { TStudent } from './student.interface';
 import Student from './student.model';
@@ -51,6 +52,12 @@ const creatingStudentWIthIdIntoDB = async (payload: TStudent) => {
   if (!admissionRequest) {
     throw new Error('Admission Request not found');
   }
+
+  const batch = await Batch.findById(admissionRequest?.batch?._id);
+
+  const section = await SectionModel.find({ batchId: batch?._id })
+    .sort({ createdAt: -1 }) // -1 for descending order
+    .limit(1);
 
   const semesterRegistration = await SemesterRegistration.findById(
     admissionRequest.semester,
@@ -108,6 +115,43 @@ const creatingStudentWIthIdIntoDB = async (payload: TStudent) => {
   if (result) {
     const id = result.admissionRequestId;
     const userId = admissionRequest.userId;
+    if (section[0].student_ids.length === section[0].capacity) {
+      let nextAlphabet = section[0].name.split(' ')[1]; // Extract existing alphabet
+      if (!nextAlphabet) {
+        const updatedSection = await SectionModel.findByIdAndUpdate(
+          section[0]._id,
+          {
+            name: `${batch?.batchNumber} A`,
+          },
+        );
+        if (updatedSection?.isModified) {
+          nextAlphabet = 'A';
+          nextAlphabet = String.fromCharCode(nextAlphabet.charCodeAt(0) + 1);
+        }
+      } else {
+        nextAlphabet = String.fromCharCode(nextAlphabet.charCodeAt(0) + 1); // Increment alphabet
+      }
+
+      // Update the current section with the new name
+
+      // Create a new section with the next alphabet in the name
+      const data = {
+        batchId: batch?._id,
+        name: `${batch?.batchNumber} ${nextAlphabet}`,
+      };
+      const newSection = await SectionModel.create(data);
+
+      // Push the student ID to the new section
+      await SectionModel.findByIdAndUpdate(newSection?._id, {
+        $push: { student_ids: result.studentId },
+      });
+    } else {
+      // If the current section is not full, just push the student ID to the existing section
+      await SectionModel.findByIdAndUpdate(section[0]._id, {
+        $push: { student_ids: result.studentId },
+      });
+    }
+
     await Admission.findByIdAndUpdate(id, { isApproved: true });
     await User.findByIdAndUpdate(userId, { role: 'student' });
     sendEmail(
