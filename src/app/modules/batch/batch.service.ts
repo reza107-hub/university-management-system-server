@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../error/AppError';
 
 import { TBatch } from './batch.interface';
-import Batch from './batch.model';
+import Batch, { SectionModel } from './batch.model';
 
 const createBatchIntoDB = async (payload: TBatch) => {
   const { batchNumber } = payload;
@@ -11,6 +11,13 @@ const createBatchIntoDB = async (payload: TBatch) => {
     throw new AppError(httpStatus.FORBIDDEN, 'batch Already exists');
   }
   const result = await Batch.create(payload);
+  if (result){
+    const data = {
+      batchId: result._id,
+      name: batchNumber.toString()
+    };
+    await SectionModel.create(data)
+  }
   return result;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

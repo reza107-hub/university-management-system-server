@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { AdmissionRequestController } from './admissionRequest.controller';
 const router = express.Router();
 import { ObjectId } from 'mongodb';
@@ -6,11 +6,27 @@ import SSLCommerzPayment from 'sslcommerz-lts';
 import config from '../../config';
 import Payment from '../payment/payment.model';
 import { sendEmail } from '../../utils/sendEmail';
-import Admission from './admissionRequest.model';
-import { receiveEmail } from '../../utils/receiveEmail';
+import AppError from '../../error/AppError';
+import httpStatus from 'http-status';
+import { createAdmission } from './admissionRequest.service';
+import { TAdmission } from './admissionRequest.interface';
 
 router.get('/', AdmissionRequestController.getAllAdmissionRequest);
 router.get('/:id', AdmissionRequestController.getSingleAdmissionRequest);
+
+const createPayment = async (
+  payload: TAdmission,
+  trans_id: string,
+  fee: number,
+) => {
+  const paymentData = {
+    email: payload.email,
+    feeType: 'Admission Fee',
+    trans_id,
+    fee,
+  };
+  await Payment.create(paymentData);
+};
 
 router.post('/', async (req, res) => {
   const payload = req.body;
@@ -53,19 +69,16 @@ router.post('/', async (req, res) => {
 
   const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
-  await sslcz
-    .init(data)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .then(async (apiResponse: { GatewayPageURL: any }) => {
-      const url = apiResponse.GatewayPageURL;
-      res.send({ url: url });
-      const paymentData = {
-        email: payload.email,
-        feeType: 'Admission Fee',
-        trans_id,
-      };
-      await Payment.create(paymentData);
-    });
+  try {
+    const apiResponse = await sslcz.init(data);
+    const url = apiResponse.GatewayPageURL;
+    res.send({ url });
+    await createAdmission(payload);
+    await createPayment(payload, trans_id, 20000);
+  } catch (error) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Payment Failed');
+  }
+
   router.post(`/payment-success/:trans_id`, async (req, res) => {
     const trans_id = req.params.trans_id;
     const result = await Payment.findOneAndUpdate(
@@ -79,47 +92,42 @@ router.post('/', async (req, res) => {
         'your payment has been successful',
         'Your admission fee is paid successfully, and you submitted your admission request successfully.',
       );
-      try {
-        const resultOfAdmission = await Admission.create(payload);
-        if (resultOfAdmission) {
-          await receiveEmail(
-            `${resultOfAdmission.email}`,
-            'Admission Request Posted',
-            `An Admission Requested From ${resultOfAdmission.email}`,
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
     }
   });
 
-  router.post(`/payment-fail/:trans_id`, async (req, res) => {
+  const handlePaymentStatus = async (
+    req: Request,
+    res: Response,
+    status: string,
+    message: string,
+  ) => {
     const trans_id = req.params.trans_id;
     const result = await Payment.findOneAndDelete({ trans_id });
+
     if (result?.$isDeleted) {
       res.redirect(`http://localhost:5173/`);
     }
-    await sendEmail(
-      payload.email,
+
+    await sendEmail(payload.email, status, message);
+    return;
+  };
+
+  router.post(`/payment-fail/:trans_id`, async (req, res) => {
+    await handlePaymentStatus(
+      req,
+      res,
       'Your payment has not successful',
       'Your admission fee is not paid successfully',
     );
-    return;
   });
 
   router.post(`/payment-cancel/:trans_id`, async (req, res) => {
-    const trans_id = req.params.trans_id;
-    const result = await Payment.findOneAndDelete({ trans_id });
-    if (result?.$isDeleted) {
-      res.redirect(`http://localhost:5173/`);
-    }
-    await sendEmail(
-      payload.email,
+    await handlePaymentStatus(
+      req,
+      res,
       'Your payment is canceled',
       'Your admission fee is not paid successfully',
     );
-    return;
   });
 });
 

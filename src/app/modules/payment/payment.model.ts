@@ -6,6 +6,7 @@ const paymentSchema = new Schema<TPayment>(
     email: { type: String, required: true },
     feeType: { type: String, required: true },
     trans_id: { type: String, required: true },
+    fee: { type: Number, required: true },
     paidStatus: { type: Boolean, default: false },
   },
   {

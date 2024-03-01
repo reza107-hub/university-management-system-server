@@ -8,7 +8,8 @@ const getAllAdmissionRequestFromDB = async () => {
   const result = await Admission.find()
     .populate('program')
     .populate('department')
-    .populate('userId');
+    .populate('userId')
+    .populate('batch');
   return result;
 };
 
@@ -16,28 +17,26 @@ const getSingleAdmissionRequestFromDB = async (id: string) => {
   const result = await Admission.findById(id)
     .populate('program')
     .populate('department')
-    .populate('userId');
+    .populate('userId')
+    .populate('batch');
   return result;
 };
 
-const postAdmissionRequestToDB = async (payload: TAdmission) => {
-  const existingData = await Admission.findOne({ email: payload.email });
-  if (existingData) {
-    throw new AppError(httpStatus.FORBIDDEN, 'Already requested for admission');
+export const createAdmission = async (payload: TAdmission) => {
+  try {
+    const resultOfAdmission = await Admission.create(payload);
+    if (resultOfAdmission) {
+      await receiveEmail(
+        resultOfAdmission.email,
+        'Admission Request Posted',
+        `An Admission Requested From ${resultOfAdmission.email}`,
+      );
+    }
+  } catch (error) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Admission Request Failed');
   }
-
-  const result = await Admission.create(payload);
-  if (result) {
-    await receiveEmail(
-      `${result.email}`,
-      'Admission Request Posted',
-      `An Admission Requested From ${result.email}`,
-    );
-  }
-  return result;
 };
 export const AdmissionRequestService = {
   getAllAdmissionRequestFromDB,
-  postAdmissionRequestToDB,
   getSingleAdmissionRequestFromDB,
 };
