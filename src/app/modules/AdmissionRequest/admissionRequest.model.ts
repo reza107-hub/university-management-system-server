@@ -7,7 +7,7 @@ const Name = new Schema<TName>({
 });
 const admissionSchema = new Schema<TAdmission>(
   {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
+    userId: { type: Schema.Types.ObjectId, ref: 'user' ,default: null},
     name: {
       type: Name,
       required: true,

@@ -12,6 +12,10 @@ router.post(
   validateRequest(studentValidation.studentValidationSchema),
   studentController.creatingStudentWIthId,
 );
-
 router.post('/deny-student', studentController.denyStudent);
+
+//-------------------------------------------
+
+router.post('/add-student',studentController.creatingStudentWIthIdManually)
+
 export const studentRouter = router;
