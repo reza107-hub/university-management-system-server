@@ -42,6 +42,20 @@ const getSingleOfferedCourses = catchAsync(
     });
   },
 );
+const getCoursesForSingleFaculty = catchAsync(
+  async (req: Request, res: Response) => {
+    const { facultyId } = req.params;
+    const result =
+      await OfferedCourseServices.getCoursesForSingleFaculty(facultyId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'OfferedCourse fetched successfully',
+      data: result,
+    });
+  },
+);
 
 const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -77,4 +91,5 @@ export const OfferedCourseControllers = {
   getSingleOfferedCourses,
   updateOfferedCourse,
   deleteOfferedCourseFromDB,
+  getCoursesForSingleFaculty,
 };

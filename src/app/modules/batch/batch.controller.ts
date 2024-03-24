@@ -33,9 +33,20 @@ const getAllBatch = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllSection = catchAsync(async (req, res) => {
+  const result = await BatchServices.getAllSectionFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Section retrieve successfully',
+    data: result,
+  });
+});
 
 export const BatchControllers = {
   createBatch,
   getAllBatch,
   updateBatch,
+  getAllSection,
 };

@@ -8,10 +8,11 @@ const router = express.Router();
 router.get('/', OfferedCourseControllers.getAllOfferedCourses);
 
 router.get('/:id', OfferedCourseControllers.getSingleOfferedCourses);
+router.get('/facultyRoutine/:facultyId', OfferedCourseControllers.getCoursesForSingleFaculty);
 
 router.post(
-  '/create-offered-course',
-  validateRequest(OfferedCourseValidations.createOfferedCourseValidationSchema),
+  '/',
+  // validateRequest(OfferedCourseValidations.createOfferedCourseValidationSchema),
   OfferedCourseControllers.createOfferedCourse,
 );
 

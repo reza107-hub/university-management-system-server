@@ -14,14 +14,6 @@ const timeStringSchema = z.string().refine(
 const createOfferedCourseValidationSchema = z.object({
   body: z
     .object({
-      semesterRegistrationId: z.string(),
-      academicSemesterId:z.string(),
-      programId: z.string(),
-      departmentId: z.string(),
-      courseId: z.string(),
-      facultyId: z.string(),
-      section: z.number(),
-      maxCapacity: z.number(),
       days: z.array(z.enum([...Days] as [string, ...string[]])),
       startTime: timeStringSchema, // HH: MM   00-23: 00-59
       endTime: timeStringSchema,

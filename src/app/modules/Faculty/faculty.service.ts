@@ -45,8 +45,21 @@ const deleteFacultyFromDb = async (playLoad: TFaculty) => {
   return result;
 };
 
+const getUserIsFacultyFromDb = async (email: string) => {
+  const result = await Faculty.findOne().populate({
+    path: 'userId',
+    match: { email: email },
+  });
+
+  if (result?.userId === null) {
+    return false;
+  }
+  return true;
+};
+
 export const FacultyService = {
   getFacultyListFromDB,
   createFacultyIntoDB,
   deleteFacultyFromDb,
+  getUserIsFacultyFromDb,
 };

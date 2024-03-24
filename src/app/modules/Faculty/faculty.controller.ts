@@ -24,17 +24,17 @@ const createFaculty = catchAsync(async (req, res) => {
   });
 });
 
-// const getUserIsAdmin = catchAsync(async (req, res) => {
-//   const email = req.params.email;
-//   const result = await AdminService.getUserIsAdminFromDb(email);
+const getUserIsFaculty = catchAsync(async (req, res) => {
+  const email = req.params.email;
+  const result = await FacultyService.getUserIsFacultyFromDb(email);
 
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: 201,
-//     message: 'Single Admin retrieved successfully',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Single Admin retrieved successfully',
+    data: result,
+  });
+});
 
 const deleteFaculty = catchAsync(async (req, res) => {
   const result = await FacultyService.deleteFacultyFromDb(req.body);
@@ -51,4 +51,5 @@ export const FacultyController = {
   getFacultyList,
   createFaculty,
   deleteFaculty,
+  getUserIsFaculty,
 };

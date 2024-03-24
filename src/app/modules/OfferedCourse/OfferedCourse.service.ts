@@ -16,27 +16,11 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     programId,
     departmentId,
     courseId,
-    section,
+    sectionId,
     facultyId,
-    days,
-    startTime,
-    endTime,
+    routine,
   } = payload;
 
-  /**
-   * Step 1: check if the semester registration id is exists!
-   * Step 2: check if the program id is exists!
-   * Step 3: check if the academic department id is exists!
-   * Step 4: check if the course id is exists!
-   * Step 5: check if the faculty id is exists!
-   * Step 6: check if the department is belong to the  faculty
-   * Step 7: check if the same offered course same section in same registered semester exists
-   * Step 8: get the schedules of the faculties
-   * Step 9: check if the faculty is available at that time. If not then throw error
-   * Step 10: create the offered course
-   */
-
-  //check if the semester registration id is exists!
   const isSemesterRegistrationExits = await SemesterRegistration.findById(
     semesterRegistrationId,
   );
@@ -48,7 +32,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     );
   }
 
-  const academicSemester = isSemesterRegistrationExits.academicSemester;
+  const academicSemesterId = isSemesterRegistrationExits.academicSemester;
 
   const isProgramExits = await Program.findById(programId);
 
@@ -74,26 +58,12 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !');
   }
 
-  // check if the department is belong to the  faculty
-  const isDepartmentBelongToFaculty = await Department.findOne({
-    _id: departmentId,
-    programId,
-  });
-
-  if (!isDepartmentBelongToFaculty) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `This ${isAcademicDepartmentExits.name} is not  belong to this ${isProgramExits.name}`,
-    );
-  }
-
-  // check if the same offered course same section in same registered semester exists
 
   const isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection =
     await OfferedCourse.findOne({
       semesterRegistrationId,
       courseId,
-      section,
+      sectionId,
     });
 
   if (isSameOfferedCourseExistsWithSameRegisteredSemesterWithSameSection) {
@@ -103,20 +73,19 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     );
   }
 
-  // get the schedules of the faculties
   const assignedSchedules = await OfferedCourse.find({
     semesterRegistrationId,
     facultyId,
-    days: { $in: days },
-  }).select('days startTime endTime');
+    'routine.days': { $in: routine?.map((r) => r.days) },
+  }).select('routine.days routine.startTime routine.endTime -_id');
 
-  const newSchedule = {
+
+  const newSchedule = routine?.map(({ days, startTime, endTime }) => ({
     days,
     startTime,
     endTime,
-  };
-
-  if (hasTimeConflict(assignedSchedules, newSchedule)) {
+  }));
+  if (assignedSchedules.length > 0 && hasTimeConflict(assignedSchedules[0]?.routine, newSchedule)) {
     throw new AppError(
       httpStatus.CONFLICT,
       `This faculty is not available at that time ! Choose other time or day`,
@@ -125,7 +94,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
   const result = await OfferedCourse.create({
     ...payload,
-    academicSemester,
+    academicSemesterId,
   });
   return result;
 };
@@ -151,9 +120,20 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
   return offeredCourse;
 };
 
+const getCoursesForSingleFaculty = async (facultyId: string) => {
+  const offeredCourse = await OfferedCourse.find({ facultyId })
+    .populate('academicSemesterId')
+    .populate('sectionId')
+    .populate('courseId');
+  if (!offeredCourse) {
+    throw new AppError(404, 'Offered Course not found');
+  }
+  return offeredCourse;
+};
+
 const updateOfferedCourseIntoDB = async (
   id: string,
-  payload: Pick<TOfferedCourse, 'facultyId' | 'days' | 'startTime' | 'endTime'>,
+  payload: Partial<TOfferedCourse>,
 ) => {
   /**
    * Step 1: check if the offered course exists
@@ -162,7 +142,7 @@ const updateOfferedCourseIntoDB = async (
    * Step 4: check if the faculty is available at that time. If not then throw error
    * Step 5: update the offered course
    */
-  const { facultyId, days, startTime, endTime } = payload;
+  const { facultyId, routine, semesterRegistrationId } = payload;
 
   const isOfferedCourseExists = await OfferedCourse.findById(id);
 
@@ -192,18 +172,18 @@ const updateOfferedCourseIntoDB = async (
 
   // check if the faculty is available at that time.
   const assignedSchedules = await OfferedCourse.find({
-    semesterRegistration,
+    semesterRegistrationId,
     facultyId,
-    days: { $in: days },
-  }).select('days startTime endTime');
+    'routine.days': { $in: routine?.map((r) => r.days) },
+  }).select('routine.days routine.startTime routine.endTime -_id');
 
-  const newSchedule = {
+  const newSchedule = routine?.map(({ days, startTime, endTime }) => ({
     days,
     startTime,
     endTime,
-  };
-
-  if (hasTimeConflict(assignedSchedules, newSchedule)) {
+  }));
+  // console.log({ newSchedule, assigned: assignedSchedules[0].routine });
+  if (hasTimeConflict(assignedSchedules[0].routine, newSchedule)) {
     throw new AppError(
       httpStatus.CONFLICT,
       `This faculty is not available at that time ! Choose other time or day`,
@@ -228,10 +208,10 @@ const deleteOfferedCourseFromDB = async (id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered Course not found');
   }
 
-  const semesterRegistation = isOfferedCourseExists.semesterRegistrationId;
+  const semesterRegistration = isOfferedCourseExists.semesterRegistrationId;
 
   const semesterRegistrationStatus =
-    await SemesterRegistration.findById(semesterRegistation).select('status');
+    await SemesterRegistration.findById(semesterRegistration).select('status');
 
   if (semesterRegistrationStatus?.status !== 'UPCOMING') {
     throw new AppError(
@@ -251,4 +231,5 @@ export const OfferedCourseServices = {
   getSingleOfferedCourseFromDB,
   deleteOfferedCourseFromDB,
   updateOfferedCourseIntoDB,
+  getCoursesForSingleFaculty,
 };
