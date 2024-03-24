@@ -37,8 +37,20 @@ const getAllBatchFromDB = async () => {
   return result;
 };
 
+const getAllSectionFromDB = async () => {
+  const result = await SectionModel.find().populate({
+    path: 'batchId',
+    populate: {
+      path: 'deptId',
+      model: 'department',
+    },
+  });
+  return result;
+};
+
 export const BatchServices = {
   createBatchIntoDB,
   getAllBatchFromDB,
   updateBatchIntoDB,
+  getAllSectionFromDB,
 };

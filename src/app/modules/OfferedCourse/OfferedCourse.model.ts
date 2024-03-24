@@ -1,6 +1,20 @@
 import mongoose, { Schema } from 'mongoose';
-import { Days } from './OfferedCourse.constant';
-import { TOfferedCourse } from './OfferedCourse.interface';
+import { TRoutine, TOfferedCourse } from './OfferedCourse.interface';
+
+const routineSchema = new mongoose.Schema<TRoutine>({
+  days: {
+    type: String,
+    required: true,
+  },
+  startTime: {
+    type: String,
+    required: true,
+  },
+  endTime: {
+    type: String,
+    required: true,
+  },
+});
 
 const offeredCourseSchema = new mongoose.Schema<TOfferedCourse>(
   {
@@ -34,24 +48,12 @@ const offeredCourseSchema = new mongoose.Schema<TOfferedCourse>(
       required: true,
       ref: 'faculty',
     },
-    section: {
-      type: Number,
+    sectionId: {
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Section',
     },
-    days: [
-      {
-        type: String,
-        enum: Days,
-      },
-    ],
-    startTime: {
-      type: String,
-      required: true,
-    },
-    endTime: {
-      type: String,
-      required: true,
-    },
+    routine: [routineSchema],
   },
   {
     timestamps: true,

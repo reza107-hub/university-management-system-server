@@ -7,6 +7,7 @@ import { FacultyController } from './faculty.controller';
 const router = express.Router();
 
 router.get('/faculty-list', FacultyController.getFacultyList);
+router.get('/:email', FacultyController.getUserIsFaculty);
 
 router.post(
   '/create-faculty',

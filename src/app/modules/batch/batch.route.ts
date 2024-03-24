@@ -17,5 +17,6 @@ router.patch(
   BatchControllers.updateBatch,
 );
 router.get('/get-all-batch', BatchControllers.getAllBatch);
+router.get('/get-all-section', BatchControllers.getAllSection);
 
 export const batchRoute = router;

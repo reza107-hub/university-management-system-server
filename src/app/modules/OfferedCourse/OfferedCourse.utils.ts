@@ -2,20 +2,40 @@ import { TSchedule } from './OfferedCourse.interface';
 
 export const hasTimeConflict = (
   assignedSchedules: TSchedule[],
-  newSchedule: TSchedule,
+  newSchedule: TSchedule[] | undefined,
 ) => {
-  for (const schedule of assignedSchedules) {
-    const existingStartTime = new Date(`1970-01-01T${schedule.startTime}`);
-    const existingEndTime = new Date(`1970-01-01T${schedule.endTime}`);
-    const newStartTime = new Date(`1970-01-01T${newSchedule.startTime}`);
-    const newEndTime = new Date(`1970-01-01T${newSchedule.endTime}`);
+  // console.log({ newSchedule, assigned: assignedSchedules });
 
-    // 10:30 - 12:30
-    // 11:30 - 1.30
-    if (newStartTime < existingEndTime && newEndTime > existingStartTime) {
-      return true;
+  for (const existingSchedule of assignedSchedules) {
+    if(newSchedule){
+      for (const newScheduleItem of newSchedule) {
+        // Check if the schedules are on the same days
+        if (
+          existingSchedule.days.includes(newScheduleItem.days) ||
+          newScheduleItem.days.includes(existingSchedule.days)
+        ) {
+          const existingStartTime = new Date(
+            `1970-01-01T${existingSchedule.startTime}`,
+          );
+          const existingEndTime = new Date(
+            `1970-01-01T${existingSchedule.endTime}`,
+          );
+          const newStartTime = new Date(
+            `1970-01-01T${newScheduleItem.startTime}`,
+          );
+          const newEndTime = new Date(`1970-01-01T${newScheduleItem.endTime}`);
+
+          // Check for overlap in schedules
+          if (
+            newStartTime < existingEndTime &&
+            newEndTime > existingStartTime
+          ) {
+            return true; // Time conflict
+          }
+        }
+      }
     }
   }
 
-  return false;
+  return false; // No time conflict
 };

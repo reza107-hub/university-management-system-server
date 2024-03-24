@@ -22,7 +22,7 @@ const batchSchema = new Schema<TBatch>(
 
 const sectionSchema = new Schema<TSection>(
   {
-    batchId: { type: Schema.Types.ObjectId },
+    batchId: { type: Schema.Types.ObjectId, ref: 'batch' },
     capacity: { type: Number, default: 1 },
     name: { type: String, required: true },
     student_ids: [{ type: String }],
