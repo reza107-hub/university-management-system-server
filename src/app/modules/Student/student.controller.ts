@@ -34,8 +34,21 @@ const denyStudent = catchAsync(async (req, res) => {
   });
 });
 
+//----------------------------------------------------------------
+const creatingStudentWIthIdManually = catchAsync(async (req, res) => {
+  const result = await studentService.creatingStudentManuallyWIthIdIntoDB(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Student created successfully',
+    data: result,
+  });
+});
+
 export const studentController = {
   getAllStudent,
   creatingStudentWIthId,
   denyStudent,
+  creatingStudentWIthIdManually
 };
