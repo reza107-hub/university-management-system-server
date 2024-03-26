@@ -63,7 +63,7 @@ const deleteAdminFromDb = async (playLoad: TAdmin) => {
 };
 
 const sendEmailToFacultyService = async(playLoad:TEmail)=>{
-  await sendEmail(playLoad.email,playLoad.subject,playLoad.emailBody)
+  await sendEmail(playLoad.email,playLoad.emailSubject,playLoad.emailText)
   return null;
 }
 

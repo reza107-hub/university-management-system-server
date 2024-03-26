@@ -19,6 +19,6 @@ export type TAdmin = {
 
 export type TEmail = {
   email: string;
-  subject: string;
-  emailBody: string;
+  emailSubject: string;
+  emailText: string;
 }
