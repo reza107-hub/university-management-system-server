@@ -47,9 +47,19 @@ const deleteAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const sendEmailToFaculty = catchAsync(async(req,res)=>{
+  const result = await AdminService.sendEmailToFacultyService(req.body)
+  sendResponse(res,{
+    success: true,
+    statusCode: 200,
+    message: 'Email sent successfully',
+    data:result
+  })
+})
 export const AdminController = {
   getAdminList,
   createAdmin,
   getUserIsAdmin,
   deleteAdmin,
+  sendEmailToFaculty
 };

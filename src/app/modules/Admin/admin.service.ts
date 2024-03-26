@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
 import AppError from '../../error/AppError';
-import { TAdmin } from './admin.interface';
+import { TAdmin, TEmail } from './admin.interface';
 import Admin from './admin.model';
 import User from '../User/user.model';
 import { searchByNameInDB } from '../../utils/searchByname';
+import { sendEmail } from '../../utils/sendEmail';
 
 const getAdminListFromDB = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,9 +62,15 @@ const deleteAdminFromDb = async (playLoad: TAdmin) => {
   return result;
 };
 
+const sendEmailToFacultyService = async(playLoad:TEmail)=>{
+  await sendEmail(playLoad.email,playLoad.subject,playLoad.emailBody)
+  return null;
+}
+
 export const AdminService = {
   getAdminListFromDB,
   createAdminIntoDB,
   getUserIsAdminFromDb,
   deleteAdminFromDb,
+  sendEmailToFacultyService
 };

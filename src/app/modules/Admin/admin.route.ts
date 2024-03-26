@@ -11,7 +11,7 @@ router.post(
   validateRequest(adminValidation.adminValidationSchema),
   AdminController.createAdmin,
 );
-
+router.post('/send-email',AdminController.sendEmailToFaculty)
 router.get('/:email', AdminController.getUserIsAdmin);
 
 router.patch('/delete', AdminController.deleteAdmin);

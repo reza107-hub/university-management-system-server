@@ -16,3 +16,9 @@ export type TAdmin = {
   bloodGroup: string;
   isDeleted: boolean;
 };
+
+export type TEmail = {
+  email: string;
+  subject: string;
+  emailBody: string;
+}
